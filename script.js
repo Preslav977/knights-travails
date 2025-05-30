@@ -40,20 +40,16 @@ function knightMoves([x, y], [s, e]) {
     queue.push([x, y]);
 
     while (queue.length !== 0) {
-      // const currentPosition = queue[0];
-
-      // const [x, y] = queue;
-
-      // console.log([x, y]);
-
       let knightMovements = allPossibleMoves([x, y]);
-
-      // console.log("Current position", currentPosition);
 
       for (let i = 0; i < knightMovements.length; i++) {
         const moveIsNotOutOfBound = checkIfNotOutOfBounds(knightMovements[i]);
 
         const currentPosition = queue[0];
+
+        const [x, y] = currentPosition;
+
+        knightMovements = allPossibleMoves([x, y]);
 
         const JSCurrentPosition = JSON.stringify(queue[0]);
 
@@ -64,26 +60,11 @@ function knightMoves([x, y], [s, e]) {
 
           // console.log("Queue", queue);
 
-          if (
-            JSCurrentPosition === JSEndPosition
-            // !visitedNodes.includes(currentPosition)
-          ) {
+          if (JSCurrentPosition === JSEndPosition) {
           } else {
             queue.shift();
 
-            // console.log("Queue", queue);
-
-            // console.log("Front of the queue", queue[0]);
-
             visitedNodes.push(currentPosition);
-
-            // console.log("Visited nodes", visitedNodes);
-
-            const [x, y] = queue;
-
-            console.log([x, y]);
-
-            knightMovements = allPossibleMoves([x, y]);
 
             console.log(visitedNodes);
           }
