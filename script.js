@@ -11,7 +11,7 @@ function allPossibleMoves([x, y]) {
   ];
 }
 
-console.log(allPossibleMoves([0, 0]));
+// console.log(allPossibleMoves([0, 0]));
 
 function checkIfNotOutOfBounds([x, y]) {
   if (x < 0 || y > 7 || y < 0 || x > 7) {
@@ -28,8 +28,6 @@ function knightMoves([x, y], [s, e]) {
 
   const visitedNodes = [];
 
-  let knightMovements = allPossibleMoves([x, y]);
-
   // console.log(knightMovements);
 
   const checkIfStartPathIsNotOutOfBounds = checkIfNotOutOfBounds([x, y]);
@@ -39,19 +37,60 @@ function knightMoves([x, y], [s, e]) {
   if (checkIfStartPathIsNotOutOfBounds || checkIfEndPathIsNotOutOfBounds) {
     throw new Error("Knight is out of bounds");
   } else {
-    for (let i = 0; i < knightMovements.length; i++) {
-      // console.log(knightMovements[i]);
+    queue.push([x, y]);
 
-      const moveIsNotOutOfBound = checkIfNotOutOfBounds(knightMovements[i]);
+    while (queue.length !== 0) {
+      // const currentPosition = queue[0];
 
-      if (!moveIsNotOutOfBound) {
-        queue.push([knightMovements[i], [x, y]]);
+      // const [x, y] = queue;
 
-        // console.log(queue);
+      // console.log([x, y]);
+
+      let knightMovements = allPossibleMoves([x, y]);
+
+      // console.log("Current position", currentPosition);
+
+      for (let i = 0; i < knightMovements.length; i++) {
+        const moveIsNotOutOfBound = checkIfNotOutOfBounds(knightMovements[i]);
+
+        const currentPosition = queue[0];
+
+        const JSCurrentPosition = JSON.stringify(queue[0]);
+
+        const JSEndPosition = JSON.stringify([s, e]);
+
+        if (!moveIsNotOutOfBound) {
+          queue.push(knightMovements[i]);
+
+          // console.log("Queue", queue);
+
+          if (
+            JSCurrentPosition === JSEndPosition
+            // !visitedNodes.includes(currentPosition)
+          ) {
+          } else {
+            queue.shift();
+
+            // console.log("Queue", queue);
+
+            // console.log("Front of the queue", queue[0]);
+
+            visitedNodes.push(currentPosition);
+
+            // console.log("Visited nodes", visitedNodes);
+
+            const [x, y] = queue;
+
+            console.log([x, y]);
+
+            knightMovements = allPossibleMoves([x, y]);
+
+            console.log(visitedNodes);
+          }
+        }
       }
     }
-
-    // while (queue.length !== 0) {}
+    return visitedNodes;
   }
 }
 
