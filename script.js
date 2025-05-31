@@ -28,8 +28,6 @@ function knightMoves([x, y], [s, e]) {
 
   const visitedNodes = [];
 
-  // console.log(knightMovements);
-
   const checkIfStartPathIsNotOutOfBounds = checkIfNotOutOfBounds([x, y]);
 
   const checkIfEndPathIsNotOutOfBounds = checkIfNotOutOfBounds([s, e]);
@@ -37,7 +35,7 @@ function knightMoves([x, y], [s, e]) {
   if (checkIfStartPathIsNotOutOfBounds || checkIfEndPathIsNotOutOfBounds) {
     throw new Error("Knight is out of bounds");
   } else {
-    queue.push([x, y]);
+    // queue.push([x, y]);
 
     while (queue.length !== 0) {
       let knightMovements = allPossibleMoves([x, y]);
@@ -55,12 +53,25 @@ function knightMoves([x, y], [s, e]) {
 
         const JSEndPosition = JSON.stringify([s, e]);
 
-        if (!moveIsNotOutOfBound) {
+        const checkIfSquareHasBeenVisited = visitedNodes.some(
+          (move) => JSON.stringify(move) === JSON.stringify([x, y]),
+        );
+
+        const checkIfKnightMovesHasEndPath = knightMovements.some(
+          (knightMoves) => JSON.stringify(knightMoves) === JSEndPosition,
+        );
+
+        if (!moveIsNotOutOfBound && !checkIfSquareHasBeenVisited) {
           queue.push(knightMovements[i]);
 
-          // console.log("Queue", queue);
-
-          if (JSCurrentPosition === JSEndPosition) {
+          if (
+            JSCurrentPosition === JSEndPosition ||
+            checkIfKnightMovesHasEndPath
+          ) {
+            console.log(
+              `=> You made it in moves! Here's your path: ${([x, y], [s, e])} `,
+            );
+            console.log(queue);
           } else {
             queue.shift();
 
@@ -71,7 +82,6 @@ function knightMoves([x, y], [s, e]) {
         }
       }
     }
-    return visitedNodes;
   }
 }
 
