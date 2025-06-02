@@ -86,14 +86,16 @@ function knightMoves([x, y], [s, e]) {
 
         // console.log(visitedNodes);
 
-        return "You found the end path";
+        return `=> You made it in ${visitedNodes.length} moves! Here's your path: [${[x, y]}], [${[queue[0]]}], [${[s, e]}]`;
       } else {
         queue.shift();
 
         visitedNodes.push(currentPosition);
+
+        console.log(visitedNodes);
       }
     }
   }
 }
 
-console.log(knightMoves([0, 0], [3, 3]));
+console.log(knightMoves([0, 0], [7, 7]));
