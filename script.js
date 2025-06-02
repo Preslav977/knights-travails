@@ -58,7 +58,9 @@ function knightMoves([x, y], [s, e]) {
         let moveIsNotOutOfBound = checkIfNotOutOfBounds(knightMovements[i]);
 
         const checkIfSquareHasBeenVisited = visitedNodes.some(
-          (move) => JSON.stringify(move) === JSCurrentPosition,
+          (move) =>
+            JSON.stringify(move) === JSCurrentPosition ||
+            JSON.stringify(move) === JSON.stringify(knightMovements[i]),
         );
 
         // console.log(
@@ -82,7 +84,7 @@ function knightMoves([x, y], [s, e]) {
       if (JSCurrentPosition === JSEndPosition || checkIfKnightMovesHasEndPath) {
         console.log(queue);
 
-        console.log(visitedNodes);
+        // console.log(visitedNodes);
 
         return "You found the end path";
       } else {
