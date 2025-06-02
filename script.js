@@ -42,53 +42,53 @@ function knightMoves([x, y], [s, e]) {
 
       const currentPosition = queue[0];
 
-      // const [x, y] = currentPosition;
-
       const JSCurrentPosition = JSON.stringify(queue[0]);
 
-      console.log("First element in the queue: ", queue[0]);
+      const JSEndPosition = JSON.stringify([s, e]);
 
-      const checkIfSquareHasBeenVisited = visitedNodes.some(
-        (move) => JSON.stringify(move) === JSCurrentPosition,
-      );
+      // console.log("First element in the queue: ", queue[0]);
 
-      console.log(
-        "Is move has been visited already?",
-        checkIfSquareHasBeenVisited,
-      );
+      if (queue.length !== 0) {
+        const [x, y] = currentPosition;
 
-      knightMovements = allPossibleMoves([x, y]);
+        knightMovements = allPossibleMoves([x, y]);
+      }
 
       for (let i = 0; i < knightMovements.length; i++) {
         let moveIsNotOutOfBound = checkIfNotOutOfBounds(knightMovements[i]);
 
-        const JSEndPosition = JSON.stringify([s, e]);
+        const checkIfSquareHasBeenVisited = visitedNodes.some(
+          (move) => JSON.stringify(move) === JSCurrentPosition,
+        );
+
+        // console.log(
+        //   "Is move has been visited already?",
+        //   checkIfSquareHasBeenVisited,
+        // );
+
+        // console.log("Visited path", visitedNodes);
 
         if (!moveIsNotOutOfBound && !checkIfSquareHasBeenVisited) {
           queue.push(knightMovements[i]);
 
-          console.log(queue);
+          // console.log(queue);
         }
+      }
 
-        // console.log(knightMovements);
+      const checkIfKnightMovesHasEndPath = knightMovements.some(
+        (knightMoves) => JSON.stringify(knightMoves) === JSEndPosition,
+      );
 
-        // const checkIfKnightMovesHasEndPath = knightMovements.some(
-        //   (knightMoves) => JSON.stringify(knightMoves) === JSEndPosition,
-        // );
+      if (JSCurrentPosition === JSEndPosition || checkIfKnightMovesHasEndPath) {
+        console.log(queue);
 
-        // if (
-        //   JSCurrentPosition === JSEndPosition
-        //   // checkIfKnightMovesHasEndPath
-        // ) {
-        //   // console.log("Queue", queue);
-        //   // console.log("Visited array", visitedNodes);
-        // } else {
-        //   queue.shift();
+        console.log(visitedNodes);
 
-        //   visitedNodes.push(knightMovements[i], currentPosition);
+        return "You found the end path";
+      } else {
+        queue.shift();
 
-        //   console.log(visitedNodes);
-        // }
+        visitedNodes.push(currentPosition);
       }
     }
   }
