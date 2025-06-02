@@ -35,51 +35,60 @@ function knightMoves([x, y], [s, e]) {
   if (checkIfStartPathIsNotOutOfBounds || checkIfEndPathIsNotOutOfBounds) {
     throw new Error("Knight is out of bounds");
   } else {
-    // queue.push([x, y]);
+    queue.push([x, y]);
 
     while (queue.length !== 0) {
       let knightMovements = allPossibleMoves([x, y]);
 
+      const currentPosition = queue[0];
+
+      // const [x, y] = currentPosition;
+
+      const JSCurrentPosition = JSON.stringify(queue[0]);
+
+      console.log("First element in the queue: ", queue[0]);
+
+      const checkIfSquareHasBeenVisited = visitedNodes.some(
+        (move) => JSON.stringify(move) === JSCurrentPosition,
+      );
+
+      console.log(
+        "Is move has been visited already?",
+        checkIfSquareHasBeenVisited,
+      );
+
+      knightMovements = allPossibleMoves([x, y]);
+
       for (let i = 0; i < knightMovements.length; i++) {
-        const moveIsNotOutOfBound = checkIfNotOutOfBounds(knightMovements[i]);
-
-        const currentPosition = queue[0];
-
-        const [x, y] = currentPosition;
-
-        knightMovements = allPossibleMoves([x, y]);
-
-        const JSCurrentPosition = JSON.stringify(queue[0]);
+        let moveIsNotOutOfBound = checkIfNotOutOfBounds(knightMovements[i]);
 
         const JSEndPosition = JSON.stringify([s, e]);
-
-        const checkIfSquareHasBeenVisited = visitedNodes.some(
-          (move) => JSON.stringify(move) === JSON.stringify([x, y]),
-        );
-
-        const checkIfKnightMovesHasEndPath = knightMovements.some(
-          (knightMoves) => JSON.stringify(knightMoves) === JSEndPosition,
-        );
 
         if (!moveIsNotOutOfBound && !checkIfSquareHasBeenVisited) {
           queue.push(knightMovements[i]);
 
-          if (
-            JSCurrentPosition === JSEndPosition ||
-            checkIfKnightMovesHasEndPath
-          ) {
-            console.log(
-              `=> You made it in moves! Here's your path: ${([x, y], [s, e])} `,
-            );
-            console.log(queue);
-          } else {
-            queue.shift();
-
-            visitedNodes.push(currentPosition);
-
-            console.log(visitedNodes);
-          }
+          console.log(queue);
         }
+
+        // console.log(knightMovements);
+
+        // const checkIfKnightMovesHasEndPath = knightMovements.some(
+        //   (knightMoves) => JSON.stringify(knightMoves) === JSEndPosition,
+        // );
+
+        // if (
+        //   JSCurrentPosition === JSEndPosition
+        //   // checkIfKnightMovesHasEndPath
+        // ) {
+        //   // console.log("Queue", queue);
+        //   // console.log("Visited array", visitedNodes);
+        // } else {
+        //   queue.shift();
+
+        //   visitedNodes.push(knightMovements[i], currentPosition);
+
+        //   console.log(visitedNodes);
+        // }
       }
     }
   }
