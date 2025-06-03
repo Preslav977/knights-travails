@@ -42,14 +42,20 @@ function knightMoves([x, y], [s, e]) {
 
       const currentPosition = queue[0];
 
+      console.log("Current position", currentPosition);
+
       const JSCurrentPosition = JSON.stringify(queue[0]);
 
       const JSEndPosition = JSON.stringify([s, e]);
 
       // console.log("First element in the queue: ", queue[0]);
 
-      if (queue.length !== 0) {
+      if (queue.length !== 0 && Array.isArray(currentPosition)) {
         const [x, y] = currentPosition;
+
+        knightMovements = allPossibleMoves([x, y]);
+      } else {
+        const [x, y] = currentPosition.move;
 
         knightMovements = allPossibleMoves([x, y]);
       }
@@ -71,9 +77,12 @@ function knightMoves([x, y], [s, e]) {
         // console.log("Visited path", visitedNodes);
 
         if (!moveIsNotOutOfBound && !checkIfSquareHasBeenVisited) {
-          queue.push(knightMovements[i]);
+          queue.push({
+            parentPosition: currentPosition,
+            move: knightMovements[i],
+          });
 
-          // console.log(queue);
+          console.log(queue);
         }
       }
 
@@ -82,20 +91,22 @@ function knightMoves([x, y], [s, e]) {
       );
 
       if (JSCurrentPosition === JSEndPosition || checkIfKnightMovesHasEndPath) {
-        console.log(queue);
+        console.log("Queue: ", queue[6]);
 
         // console.log(visitedNodes);
 
-        return `=> You made it in ${visitedNodes.length} moves! Here's your path: [${[x, y]}], [${[queue[0]]}], [${[s, e]}]`;
+        return queue;
+
+        // return `=> You made it in ${visitedNodes.length} moves! Here's your path: [${[x, y]}], [${[queue[0]]}], [${[s, e]}]`;
       } else {
         queue.shift();
 
         visitedNodes.push(currentPosition);
 
-        console.log(visitedNodes);
+        console.log("Visited nodes", visitedNodes);
       }
     }
   }
 }
 
-console.log(knightMoves([0, 0], [7, 7]));
+console.log(knightMoves([0, 0], [3, 3]));
