@@ -26,7 +26,9 @@ function checkIfNotOutOfBounds([x, y]) {
 function knightMoves([x, y], [s, e]) {
   const queue = [];
 
-  const visitedNodes = [];
+  const visitedNodes = {};
+
+  let parentPosition = { parent: null, coordinates: [x, y] };
 
   const checkIfStartPathIsNotOutOfBounds = checkIfNotOutOfBounds([x, y]);
 
@@ -35,76 +37,58 @@ function knightMoves([x, y], [s, e]) {
   if (checkIfStartPathIsNotOutOfBounds || checkIfEndPathIsNotOutOfBounds) {
     throw new Error("Knight is out of bounds");
   } else {
-    queue.push([x, y]);
+    queue.push(parentPosition);
 
     while (queue.length !== 0) {
       let knightMovements = allPossibleMoves([x, y]);
 
-      const currentPosition = queue[0];
+      let currentPosition = queue[0];
 
-      console.log("Current position", currentPosition);
+      // const JSCurrentPosition = JSON.stringify(queue[0]);
 
-      const JSCurrentPosition = JSON.stringify(queue[0]);
+      // console.log(JSCurrentPosition);
 
-      const JSEndPosition = JSON.stringify([s, e]);
+      // const JSEndPosition = JSON.stringify([s, e]);
 
       // console.log("First element in the queue: ", queue[0]);
 
-      if (queue.length !== 0 && Array.isArray(currentPosition)) {
-        const [x, y] = currentPosition;
-
-        knightMovements = allPossibleMoves([x, y]);
-      } else {
-        const [x, y] = currentPosition.move;
-
-        knightMovements = allPossibleMoves([x, y]);
-      }
+      knightMovements = allPossibleMoves([x, y]);
 
       for (let i = 0; i < knightMovements.length; i++) {
         let moveIsNotOutOfBound = checkIfNotOutOfBounds(knightMovements[i]);
 
-        const checkIfSquareHasBeenVisited = visitedNodes.some(
-          (move) =>
-            JSON.stringify(move) === JSCurrentPosition ||
-            JSON.stringify(move) === JSON.stringify(knightMovements[i]),
-        );
+        // parentPosition.parent = currentPosition;
 
-        // console.log(
-        //   "Is move has been visited already?",
-        //   checkIfSquareHasBeenVisited,
-        // );
+        // console.log()
 
-        // console.log("Visited path", visitedNodes);
+        if (
+          !moveIsNotOutOfBound &&
+          !Object.hasOwn(visitedNodes, `[${knightMovements[i]}]`)
+        ) {
+          const newParentPosition = {
+            parent: currentPosition,
+            coordinates: knightMovements[i],
+          };
 
-        if (!moveIsNotOutOfBound && !checkIfSquareHasBeenVisited) {
-          queue.push({
-            parentPosition: currentPosition,
-            move: knightMovements[i],
-          });
-
+          queue.push(newParentPosition);
+          // parentPosition.parent = currentPosition;
+          // currentPosition.coordinates = knightMovements[i];
+          // queue.push(currentPosition);
           console.log(queue);
         }
       }
 
-      const checkIfKnightMovesHasEndPath = knightMovements.some(
-        (knightMoves) => JSON.stringify(knightMoves) === JSEndPosition,
-      );
+      // if (JSCurrentPosition === JSEndPosition) {
+      // console.log("Queue: ", queue[6]);
+      // console.log(visitedNodes);
+      // return queue;
+      // } else {
+      // queue.shift();
 
-      if (JSCurrentPosition === JSEndPosition || checkIfKnightMovesHasEndPath) {
-        console.log("Queue: ", queue[6]);
+      // visitedNodes.push(currentPosition);
 
-        // console.log(visitedNodes);
-
-        return queue;
-
-        // return `=> You made it in ${visitedNodes.length} moves! Here's your path: [${[x, y]}], [${[queue[0]]}], [${[s, e]}]`;
-      } else {
-        queue.shift();
-
-        visitedNodes.push(currentPosition);
-
-        console.log("Visited nodes", visitedNodes);
-      }
+      // console.log("Visited nodes", visitedNodes);
+      // }
     }
   }
 }
