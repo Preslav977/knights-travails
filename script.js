@@ -46,11 +46,7 @@ function knightMoves([x, y], [s, e]) {
 
       const JSCurrentPosition = JSON.stringify(queue[0].coordinates);
 
-      // console.log(JSCurrentPosition);
-
       const JSEndPosition = JSON.stringify([s, e]);
-
-      // console.log("First element in the queue: ", queue[0]);
 
       if (queue.length !== 0) {
         const [x, y] = currentPosition.coordinates;
@@ -71,8 +67,6 @@ function knightMoves([x, y], [s, e]) {
           };
 
           queue.push(newParentPosition);
-
-          // console.log(queue);
         }
       }
 
@@ -81,29 +75,29 @@ function knightMoves([x, y], [s, e]) {
       );
 
       if (JSCurrentPosition === JSEndPosition || endPositionInMoves) {
-        let getTheObjectWithEndPosition = queue.find(
+        let findThePathWithEndPosition = queue.find(
           (move) => JSON.stringify(move.coordinates) === JSEndPosition,
         );
 
-        const pushThePathForTheKnight = [];
+        const pushTheMovesFromThePath = [];
 
-        while (getTheObjectWithEndPosition.parent !== null) {
-          getTheObjectWithEndPosition = getTheObjectWithEndPosition.parent;
+        pushTheMovesFromThePath.push(findThePathWithEndPosition.coordinates);
 
-          pushThePathForTheKnight.push(getTheObjectWithEndPosition.coordinates);
+        while (findThePathWithEndPosition !== null) {
+          findThePathWithEndPosition = findThePathWithEndPosition.parent;
 
-          const getFromStartToEndPath = pushThePathForTheKnight
+          pushTheMovesFromThePath.push(findThePathWithEndPosition.coordinates);
+
+          const reverseAndLoopTheMoves = pushTheMovesFromThePath
             .toReversed()
             .map((move) => {
               return `[${move}]`;
             });
 
-          if (getTheObjectWithEndPosition.parent === null) {
-            return `You made it in ${getFromStartToEndPath.length} moves! Here's your path: ${getFromStartToEndPath}`;
+          if (findThePathWithEndPosition.parent === null) {
+            return `You made it in ${reverseAndLoopTheMoves.length} moves! Here's your path: ${reverseAndLoopTheMoves}`;
           }
         }
-
-        return getTheObjectWithEndPosition;
       } else {
         queue.shift();
 
@@ -121,4 +115,4 @@ function knightMoves([x, y], [s, e]) {
   }
 }
 
-console.log(knightMoves([0, 0], [7, 7]));
+console.log(knightMoves([0, 0], [3, 3]));
