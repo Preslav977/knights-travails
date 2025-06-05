@@ -81,7 +81,29 @@ function knightMoves([x, y], [s, e]) {
       );
 
       if (JSCurrentPosition === JSEndPosition || endPositionInMoves) {
-        console.log(queue);
+        let getTheObjectWithEndPosition = queue.find(
+          (move) => JSON.stringify(move.coordinates) === JSEndPosition,
+        );
+
+        const pushThePathForTheKnight = [];
+
+        while (getTheObjectWithEndPosition.parent !== null) {
+          getTheObjectWithEndPosition = getTheObjectWithEndPosition.parent;
+
+          pushThePathForTheKnight.push(getTheObjectWithEndPosition.coordinates);
+
+          const getFromStartToEndPath = pushThePathForTheKnight
+            .toReversed()
+            .map((move) => {
+              return `[${move}]`;
+            });
+
+          if (getTheObjectWithEndPosition.parent === null) {
+            return `You made it in ${getFromStartToEndPath.length} moves! Here's your path: ${getFromStartToEndPath}`;
+          }
+        }
+
+        return getTheObjectWithEndPosition;
       } else {
         queue.shift();
 
