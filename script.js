@@ -44,26 +44,26 @@ function knightMoves([x, y], [s, e]) {
 
       let currentPosition = queue[0];
 
-      // const JSCurrentPosition = JSON.stringify(queue[0]);
+      const JSCurrentPosition = JSON.stringify(queue[0].coordinates);
 
       // console.log(JSCurrentPosition);
 
-      // const JSEndPosition = JSON.stringify([s, e]);
+      const JSEndPosition = JSON.stringify([s, e]);
 
       // console.log("First element in the queue: ", queue[0]);
 
-      knightMovements = allPossibleMoves([x, y]);
+      if (queue.length !== 0) {
+        const [x, y] = currentPosition.coordinates;
+
+        knightMovements = allPossibleMoves([x, y]);
+      }
 
       for (let i = 0; i < knightMovements.length; i++) {
         let moveIsNotOutOfBound = checkIfNotOutOfBounds(knightMovements[i]);
 
-        // parentPosition.parent = currentPosition;
-
-        // console.log()
-
         if (
           !moveIsNotOutOfBound &&
-          !Object.hasOwn(visitedNodes, `[${knightMovements[i]}]`)
+          !Object.hasOwn(visitedNodes, `[${knightMovements[i]}]`.toString())
         ) {
           const newParentPosition = {
             parent: currentPosition,
@@ -71,26 +71,32 @@ function knightMoves([x, y], [s, e]) {
           };
 
           queue.push(newParentPosition);
-          // parentPosition.parent = currentPosition;
-          // currentPosition.coordinates = knightMovements[i];
-          // queue.push(currentPosition);
-          console.log(queue);
+
+          // console.log(queue);
         }
       }
 
-      // if (JSCurrentPosition === JSEndPosition) {
-      // console.log("Queue: ", queue[6]);
-      // console.log(visitedNodes);
-      // return queue;
-      // } else {
-      // queue.shift();
+      const endPositionInMoves = queue.some(
+        (moves) => JSON.stringify(moves.coordinates) === JSEndPosition,
+      );
 
-      // visitedNodes.push(currentPosition);
+      if (JSCurrentPosition === JSEndPosition || endPositionInMoves) {
+        console.log(queue);
+      } else {
+        queue.shift();
 
-      // console.log("Visited nodes", visitedNodes);
-      // }
+        if (currentPosition.parent === null) {
+          Object.assign(visitedNodes, {
+            [`[${currentPosition.coordinates}]`]: null,
+          });
+        } else {
+          Object.assign(visitedNodes, {
+            [`[${currentPosition.coordinates}]`]: `[${currentPosition.parent.coordinates}]`,
+          });
+        }
+      }
     }
   }
 }
 
-console.log(knightMoves([0, 0], [3, 3]));
+console.log(knightMoves([0, 0], [7, 7]));
